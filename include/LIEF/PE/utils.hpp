@@ -31,6 +31,7 @@ namespace PE {
 
 //! @brief check if the `file` is a PE file
 LIEF_API bool is_pe(const std::string& file);
+LIEF_API bool is_pe(const std::wstring& file);
 
 //! @brief check if the raw data is a PE file
 LIEF_API bool is_pe(const std::vector<uint8_t>& raw);

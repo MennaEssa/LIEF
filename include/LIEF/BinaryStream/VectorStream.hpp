@@ -25,6 +25,7 @@ class VectorStream : public BinaryStream {
   public:
   //using BinaryStream::read_integer;
   VectorStream(const std::string& filename);
+  VectorStream(const std::wstring& filename);
   VectorStream(const std::vector<uint8_t>& data);
 
   virtual uint64_t size(void) const override;

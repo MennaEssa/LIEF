@@ -74,6 +74,19 @@ Parser::Parser(const std::string& file) :
   this->init(filesystem::path(file).filename());
 }
 
+Parser::Parser(const std::wstring& file) :
+    LIEF::Parser{ file }
+{
+
+    if (not is_pe(file)) {
+        throw LIEF::bad_format("file is not an PE");
+    }
+
+    // Read from file
+    this->stream_ = std::unique_ptr<VectorStream>(new VectorStream{ file });
+    this->init(filesystem::path(file).filename());
+}
+
 Parser::Parser(const std::vector<uint8_t>& data, const std::string& name) :
   stream_{std::unique_ptr<VectorStream>(new VectorStream{data})}
 {
@@ -905,6 +918,11 @@ void Parser::parse_overlay(void) {
 std::unique_ptr<Binary> Parser::parse(const std::string& filename) {
   Parser parser{filename};
   return std::unique_ptr<Binary>{parser.binary_};
+}
+
+std::unique_ptr<Binary> Parser::parse(const std::wstring& filename) {
+    Parser parser{ filename };
+    return std::unique_ptr<Binary>{parser.binary_};
 }
 
 

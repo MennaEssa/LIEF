@@ -45,6 +45,25 @@ VectorStream::VectorStream(const std::string& filename) {
   }
 }
 
+VectorStream::VectorStream(const std::wstring& filename) {
+    std::ifstream binary(filename, std::ios::in | std::ios::binary);
+
+    if (binary) {
+        binary.unsetf(std::ios::skipws);
+        binary.seekg(0, std::ios::end);
+        assert(binary.tellg() > 0);
+        this->size_ = static_cast<uint64_t>(binary.tellg());
+        binary.seekg(0, std::ios::beg);
+
+        // reserve capacity
+        this->binary_.resize(this->size() + 30, 0);
+        binary.read(reinterpret_cast<char*>(binary_.data()), this->size_);
+        binary.close();
+    }
+    else {
+        throw LIEF::bad_file("Unable to open file");
+    }
+}
 
 VectorStream::VectorStream(const std::vector<uint8_t>& data) :
   binary_{data},

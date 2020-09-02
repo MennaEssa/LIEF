@@ -131,4 +131,20 @@ Parser::Parser(const std::string& filename) :
   }
 }
 
+Parser::Parser(const std::wstring& filename) :
+    binary_size_{ 0 },
+    binary_nameW_{ filename }
+{
+    std::ifstream file(filename, std::ios::in | std::ios::binary);
+    if (file) {
+        file.unsetf(std::ios::skipws);
+        file.seekg(0, std::ios::end);
+        this->binary_size_ = static_cast<uint64_t>(file.tellg());
+        file.seekg(0, std::ios::beg);
+    }
+    else {
+        throw LIEF::bad_file("Unable to open file ");
+    }
+}
+
 }

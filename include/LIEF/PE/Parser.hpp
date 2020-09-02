@@ -53,6 +53,7 @@ class LIEF_API Parser : public LIEF::Parser {
 
   public:
   static std::unique_ptr<Binary> parse(const std::string& filename);
+  static std::unique_ptr<Binary> parse(const std::wstring& filename);
   static std::unique_ptr<Binary> parse(const std::vector<uint8_t>& data, const std::string& name = "");
 
   Parser& operator=(const Parser& copy) = delete;
@@ -60,6 +61,7 @@ class LIEF_API Parser : public LIEF::Parser {
 
   private:
   Parser(const std::string& file);
+  Parser(const std::wstring& file);
   Parser(const std::vector<uint8_t>& data, const std::string& name);
 
   ~Parser(void);

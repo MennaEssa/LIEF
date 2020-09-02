@@ -75,6 +75,43 @@ bool is_pe(const std::string& file) {
   return std::equal(std::begin(signature), std::end(signature), std::begin(PE_Magic));
 }
 
+bool is_pe(const std::wstring& file) {
+    std::ifstream binary(file, std::ios::in | std::ios::binary);
+    if (not binary) {
+        LOG(ERROR) << "Unable to open the file!";
+        return false;
+    }
+
+    uint64_t file_size;
+    binary.unsetf(std::ios::skipws);
+    binary.seekg(0, std::ios::end);
+    file_size = binary.tellg();
+    binary.seekg(0, std::ios::beg);
+
+
+    if (file_size < sizeof(pe_dos_header)) {
+        LOG(ERROR) << "File too small";
+        return false;
+    }
+
+    char magic[2];
+    pe_dos_header dos_header;
+    binary.read(magic, sizeof(magic));
+    if (magic[0] != 'M' or magic[1] != 'Z') {
+        return false;
+    }
+
+    binary.seekg(0, std::ios::beg);
+    binary.read(reinterpret_cast<char*>(&dos_header), sizeof(pe_dos_header));
+    if (dos_header.AddressOfNewExeHeader >= file_size) {
+        return false;
+    }
+    char signature[sizeof(PE_Magic)];
+    binary.seekg(dos_header.AddressOfNewExeHeader, std::ios::beg);
+    binary.read(signature, sizeof(PE_Magic));
+    return std::equal(std::begin(signature), std::end(signature), std::begin(PE_Magic));
+}
+
 
 bool is_pe(const std::vector<uint8_t>& raw) {
 

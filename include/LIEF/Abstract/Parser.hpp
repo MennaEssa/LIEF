@@ -33,6 +33,7 @@ class LIEF_API Parser
     //! return the **last** one
     //! @see LIEF::MachO::Parser::parse
     static std::unique_ptr<Binary> parse(const std::string& filename);
+    static std::unique_ptr<Binary> parse(const std::wstring& filename);
 
 
     //! @brief Construct an LIEF::Binary from the given raw data
@@ -44,8 +45,11 @@ class LIEF_API Parser
 
   protected:
     Parser(const std::string& file);
+    Parser(const std::wstring& file);
+
     uint64_t    binary_size_;
     std::string binary_name_;
+    std::wstring binary_nameW_;
 
     ~Parser(void);
     Parser(void);
